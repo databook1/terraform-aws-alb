@@ -97,10 +97,10 @@ resource "aws_lb" "default" {
     enabled = var.access_logs_enabled
   }
   dynamic "subnet_mapping" {
-    count = var.create_subnet_ips ? length(aws_eip.epis) : 0
+    for_each = { for idx, eip in aws_eip.eips : idx => eip.id }
     content {
-      subnet_id        = var.subnet_ids[count.index]
-      allallocation_id = aws_eip.epis[count.index].id
+      subnet_id     = var.subnet_ids[idx]
+      allocation_id = each.value
     }
   }
 }

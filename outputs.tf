@@ -67,5 +67,5 @@ output "access_logs_bucket_id" {
 
 output "alb_ips" {
   description = "List of IP addresses associated with the load balancer"
-  value       = compact(concat(concat(aws_epi.eips.*.private_ip), concat(aws_epi.eips.*.public_ip)))
+  value       = compact(concat(concat(aws_eip.eips.*.private_ip), concat(aws_eip.eips.*.public_ip)))
 }
