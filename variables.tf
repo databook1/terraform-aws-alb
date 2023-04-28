@@ -362,3 +362,10 @@ variable "preserve_host_header" {
   default     = false
   description = "Indicates whether the Application Load Balancer should preserve the Host header in the HTTP request and send it to the target without any change."
 }
+
+variable "create_subnet_ips" {
+  type        = bool
+  default     = false
+  description = "Indicates whether a specific Elastic IP should be created for each associated subnet and assigned to the load balancer"
+}
+
