@@ -99,8 +99,8 @@ resource "aws_lb" "default" {
   dynamic "subnet_mapping" {
     for_each = { for idx, eip in aws_eip.eips : idx => eip.id }
     content {
-      subnet_id     = var.subnet_ids[idx]
-      allocation_id = each.value
+      subnet_id     = var.subnet_ids[subnet_mapping.key]
+      allocation_id = subnet_mapping.value
     }
   }
 }
