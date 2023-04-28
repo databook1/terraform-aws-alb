@@ -64,3 +64,8 @@ output "access_logs_bucket_id" {
   description = "The S3 bucket ID for access logs"
   value       = module.access_logs.bucket_id
 }
+
+output "alb_ips" {
+  description = "List of IP addresses associated with the load balancer"
+  value       = compact(concat(concat(aws_epi.eips.*.private_ip), concat(aws_epi.eips.*.public_ip)))
+}

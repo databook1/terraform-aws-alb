@@ -96,6 +96,13 @@ resource "aws_lb" "default" {
     prefix  = var.access_logs_prefix
     enabled = var.access_logs_enabled
   }
+  dynamic "subnet_mapping" {
+    count = var.create_subnet_ips ? length(aws_eip.epis) : 0
+    content {
+      subnet_id        = var.subnet_ids[count.index]
+      allallocation_id = aws_eip.epis[count.index].id
+    }
+  }
 }
 
 module "default_target_group_label" {
@@ -221,4 +228,10 @@ resource "aws_lb_listener_certificate" "https_sni" {
   count           = module.this.enabled && var.https_enabled && var.additional_certs != [] ? length(var.additional_certs) : 0
   listener_arn    = join("", aws_lb_listener.https.*.arn)
   certificate_arn = var.additional_certs[count.index]
+}
+
+
+resource "aws_eip" "eips" {
+  count = var.create_subnet_ips ? length(var.subnet_ids) : 0
+  vpc   = var.internal ? true : false
 }
