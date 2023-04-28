@@ -65,7 +65,7 @@ output "access_logs_bucket_id" {
   value       = module.access_logs.bucket_id
 }
 
-output "alb_ips" {
-  description = "List of IP addresses associated with the load balancer"
-  value       = compact(concat(concat(aws_eip.eips.*.private_ip), concat(aws_eip.eips.*.public_ip)))
-}
+# output "alb_ips" {
+#   description = "List of IP addresses associated with the load balancer"
+#   value       = compact(concat(aws_network_interface.private_ips.*.private_ips))
+# }

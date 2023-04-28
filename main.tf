@@ -97,10 +97,10 @@ resource "aws_lb" "default" {
     enabled = var.access_logs_enabled
   }
   dynamic "subnet_mapping" {
-    for_each = { for idx, eip in aws_eip.eips : idx => eip.id }
+    for_each = { for idx, ip in aws_network_interface.private_ips : idx => element(ip.private_ip_list, 0) }
     content {
-      subnet_id     = var.subnet_ids[subnet_mapping.key]
-      allocation_id = subnet_mapping.value
+      subnet_id            = subnet_mapping.key
+      private_ipv4_address = subnet_mapping.value
     }
   }
 }
@@ -231,7 +231,8 @@ resource "aws_lb_listener_certificate" "https_sni" {
 }
 
 
-resource "aws_eip" "eips" {
-  count = var.create_subnet_ips ? length(var.subnet_ids) : 0
-  vpc   = var.internal ? true : false
+resource "aws_network_interface" "private_ips" {
+  for_each = toset(var.subnet_ids)
+
+  subnet_id = each.key
 }
